@@ -1,0 +1,285 @@
+<!-- templates/auth.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login / Signup</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <style>
+      /* Import Font Awesome for icons */
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css");
+
+      /* General Styling */
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f8f2; /* Light sage background */
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.9),
+            rgba(255, 255, 255, 0.9)
+          ),
+          url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h20v20H0z" fill="none"/><path d="M10 2l1.5 1.5L5 10l6.5 6.5L10 18l-8-8 8-8z" fill="%23a8c69f"/></svg>');
+        padding-top: 50px;
+      }
+
+      .container {
+        max-width: 900px;
+      }
+
+      h2 {
+        color: #2c5530; /* Dark green */
+        font-size: 36px;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      h2::before {
+        content: "\f06c"; /* Leaf icon */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 10px;
+        color: #4a8505;
+      }
+
+      /* Form Section */
+      form {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
+        border: 1px solid #e8f5e9;
+      }
+
+      h4 {
+        font-size: 28px;
+        color: #2c5530;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      /* Icons for form headers */
+      .col-md-6:first-child h4::before {
+        content: "\f4d8"; /* User Plus icon */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 10px;
+        color: #4a8505;
+      }
+
+      .col-md-6:last-child h4::before {
+        content: "\f2f6"; /* Sign In icon */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 10px;
+        color: #4a8505;
+      }
+
+      /* Input fields */
+      .form-group {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        font-size: 16px;
+        color: #2c5530;
+        font-weight: 500;
+      }
+
+      .form-control {
+        font-size: 14px;
+        padding: 12px 12px 12px 40px; /* Space for icons */
+        border: 2px solid #e8f5e9;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        background-color: #fcfcfc;
+      }
+
+      .form-control:focus {
+        border-color: #4a8505;
+        box-shadow: 0 0 8px rgba(74, 133, 5, 0.2);
+        background-color: #fff;
+      }
+
+      /* Input Icons */
+      .form-group::before {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        left: 12px;
+        top: 38px;
+        color: #4a8505;
+        font-size: 16px;
+      }
+
+      /* Specific icons for each field */
+      .form-group:has(input[name="name"])::before {
+        content: "\f007"; /* User icon */
+      }
+
+      .form-group:has(input[name="email"])::before {
+        content: "\f0e0"; /* Envelope icon */
+      }
+
+      .form-group:has(input[name="password"])::before {
+        content: "\f023"; /* Lock icon */
+      }
+
+      .form-group:has(select[name="role"])::before {
+        content: "\f4d8"; /* User Tag icon */
+      }
+
+      /* Role Dropdown */
+      #role {
+        font-size: 14px;
+        padding-left: 40px;
+        cursor: pointer;
+        background-color: #fcfcfc;
+      }
+
+      /* Buttons */
+      .btn {
+        font-size: 16px;
+        padding: 12px 24px;
+        background-color: #4a8505;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn:hover {
+        background-color: #3d6e04;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 133, 5, 0.2);
+      }
+
+      .btn::before {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 8px;
+      }
+
+      /* Button icons */
+      .col-md-6:first-child .btn::before {
+        content: "\f4d8"; /* User Plus icon */
+      }
+
+      .col-md-6:last-child .btn::before {
+        content: "\f2f6"; /* Sign In icon */
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+          margin-top: 50px;
+        }
+
+        .col-md-6 {
+          margin-bottom: 30px;
+        }
+
+        h2 {
+          font-size: 28px;
+        }
+
+        h4 {
+          font-size: 24px;
+        }
+      }
+
+      /* Custom role icons */
+      #role option[value="farmer"]::before {
+        content: "\f06c"; /* Leaf */
+      }
+
+      #role option[value="company"]::before {
+        content: "\f1ad"; /* Building */
+      }
+
+      #role option[value="customer"]::before {
+        content: "\f007"; /* User */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2 class="text-center">Login / Signup</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Signup</h4>
+          <form action="/signup" method="POST">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select name="role" id="role" class="form-control" required>
+                <option value="farmer">Farmer</option>
+                <option value="company">Company</option>
+                <option value="customer">Customer</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Signup</button>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <h4>Login</h4>
+          <form action="/login" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="form-control"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
