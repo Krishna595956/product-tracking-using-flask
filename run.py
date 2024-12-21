@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash,session
 from werkzeug.security import generate_password_hash, check_password_hash
 from pymongo import MongoClient
 from datetime import datetime
@@ -10,6 +10,7 @@ app.secret_key = 'your_secret_key'  # For flash messages
 client = MongoClient("mongodb+srv://krishnareddy:1234567890@diploma.1v5g6.mongodb.net/")
 db = client['farmconnect']
 users_collection = db['users']
+products_collection = db['products']
 
 # Helper function to handle password hashing
 def hash_password(password):
@@ -51,9 +52,6 @@ def register():
 
     return render_template('register.html')  # Render the registration form
 
-# Login route
-from flask import session
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -68,8 +66,6 @@ def login():
         if not user or not check_password_hash(user['password'], password):
             flash('Invalid email or password!', 'danger')
             return redirect(url_for('login'))
-
-        # Store the email in session after successful login
         session['email'] = email
 
         flash('Login successful!', 'success')
@@ -126,13 +122,16 @@ def add_product():
         'additional_notes': additional_notes
     }
 
-    # Insert the data into the 'products' collection
-    products_collection = db['products']
     products_collection.insert_one(new_product)
 
     # Flash a success message and redirect to a confirmation page
     flash('Product added successfully!', 'success')
     return redirect(url_for('index'))
+
+@app.route('/products')
+def display_products():
+    products = list(products_collection.find())
+    return render_template('products.html', products=products)
 
 if __name__ == '__main__':
     app.run(debug=True)
